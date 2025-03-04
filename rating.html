@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Your Experience</title>
+
+    <!-- Firebase Compatibility Version -->
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="rating.css">
+</head>
+<body>
+    <div class="border">
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        <div class="container">
+            <h2 id="question-text">Loading...</h2>
+
+            <div class="rating">
+                <div class="option" data-value="1">
+                    <span class="emoji">😡</span>
+                    <p>Very Not Satisfied</p>
+                </div>
+                <div class="option" data-value="2">
+                    <span class="emoji">😞</span>
+                    <p>Not Satisfied</p>
+                </div>
+                <div class="option" data-value="3">
+                    <span class="emoji">😐</span>
+                    <p>Decent</p>
+                </div>
+                <div class="option" data-value="4">
+                    <span class="emoji">😊</span>
+                    <p>Good</p>
+                </div>
+                <div class="option" data-value="5">
+                    <span class="emoji">😍</span>
+                    <p>Excellent</p>
+                </div>
+            </div>
+
+            <button id="submitFeedback" disabled>Next</button>
+        </div>
+    </div>
+
+    <script>
+        // 🔥 Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFax_hk9d4qvGPrS3EHsf1ug2jIHpiZuI",
+            authDomain: "customerfeedbacksystem-2d20b.firebaseapp.com",
+            projectId: "customerfeedbacksystem-2d20b",
+            storageBucket: "customerfeedbacksystem-2d20b.appspot.com",
+            messagingSenderId: "258504629364",
+            appId: "1:258504629364:web:792fc57ac8161374748521",
+            measurementId: "G-9GJ32EF038"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        console.log("Firebase initialized:", firebase.apps.length > 0);
+
+        // 🎯 Questions List
+        const questions = [
+            "Courteous & Friendly Staff? 👤",
+            "Prompt & Clear Information? ℹ️",
+            "Cleanliness of Facility? 🫧",
+            "Washrooms? 🚽🚻",
+            "Air Conditioning? ❄️",
+            "Medical Equipment? 🩺",
+            "Your waiting time? ⌛",
+            "How was your overall experience? 🤔"
+        ];
+
+        let currentQuestion = 0;
+        let selectedRating = null;
+        let responses = [];
+
+        const questionText = document.getElementById("question-text");
+        const options = document.querySelectorAll(".option");
+        const submitButton = document.getElementById("submitFeedback");
+        const progressBar = document.querySelector(".progress-bar");
+
+        // 🏁 Load First Question
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                questionText.textContent = questions[currentQuestion];
+                submitButton.disabled = true;
+                selectedRating = null;
+                options.forEach(option => option.classList.remove("selected"));
+
+                // 📊 Update progress bar
+                let progress = ((currentQuestion + 1) / questions.length) * 100;
+                progressBar.style.width = progress + "%";
+            } else {
+                saveResponses();  // 📝 Save responses when done
+            }
+        }
+
+        // ⭐ Handle Selection
+        options.forEach(option => {
+            option.addEventListener("click", function () {
+                selectedRating = parseInt(this.getAttribute("data-value"));
+                options.forEach(opt => opt.classList.remove("selected"));
+                this.classList.add("selected");
+                submitButton.disabled = false;
+            });
+        });
+
+        // 🚀 Submit Answer & Go to Next Question
+        submitButton.addEventListener("click", function () {
+            if (selectedRating !== null) {
+                responses.push(selectedRating);
+                currentQuestion++;
+                loadQuestion();
+            }
+        });
+
+        // 🔥 Save Responses to Firestore
+        function saveResponses() {
+            db.collection("feedback").add({
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                responses: responses
+            })
+            .then(() => {
+                console.log("Responses saved successfully!");
+                evaluateResponses();
+            })
+            .catch(error => {
+                console.error("Error saving responses:", error);
+                alert("Error: " + error.message);
+            });
+        }
+
+        // 📊 Evaluate User Responses
+        function evaluateResponses() {
+            let positiveResponses = responses.filter(score => score >= 4).length;
+            let majorityPositive = positiveResponses >= Math.ceil(questions.length / 2);
+
+            if (majorityPositive) { 
+                window.location.href = "success.html";
+            } else {
+                window.location.href = "improve.html";
+            }
+        }
+
+        // 🏁 Start Survey
+        loadQuestion();
+    </script>
+</body>
+</html>

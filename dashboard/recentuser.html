@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="recentuser.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script type="module" src="recentuser.js"></script>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+    <h1>Careclinics's Customer Feedback Dashboard</h1>
+</div>
+
+<!-- Separate the container to prevent it from inheriting width -->
+<div class="container">
+    <h2>Recent Customers</h2>
+    <div class="table-wrapper">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="customersTableBody">
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <div class="download-wrapper">
+        <button id="downloadExcel">Download Excel</button>
+    </div>
+    
+</div>
+
+
+
+</body>
+</html>

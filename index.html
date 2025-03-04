@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Feedback</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- 🔥 Firebase SDK (Add this if using Firebase) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFax_hk9d4qvGPrS3EHsf1ug2jIHpiZuI",
+            authDomain: "customerfeedbacksystem-2d20b.firebaseapp.com",
+            projectId: "customerfeedbacksystem-2d20b",
+            storageBucket: "customerfeedbacksystem-2d20b.appspot.com",
+            messagingSenderId: "258504629364",
+            appId: "1:258504629364:web:792fc57ac8161374748521",
+            measurementId: "G-9GJ32EF038"
+        };
+
+        initializeApp(firebaseConfig);
+        const db = getFirestore();
+    </script>
+</head>
+<body>
+    <div class="card">
+        <div>
+            <h1 class="fade-text" id="header"></h1>
+            <p>Give us your best Feedback 😎</p>
+    <script>
+        const headers = ["Welcome to Careclinics","We want to hear from you", "Come on! Rate us..", "Anything we can improve?", "We want to hear from you"];
+        let index = 0;
+        const headerElement = document.getElementById("header");
+        
+        function changeHeader() {
+            headerElement.style.opacity = 0;
+            setTimeout(() => {
+                headerElement.innerText = headers[index];
+                headerElement.style.opacity = 1;
+                index = (index + 1) % headers.length;
+            }, 1000);
+            setTimeout(changeHeader, 6000); // Change header every 4 seconds
+        }
+        
+        changeHeader();
+    </script>
+        </div>
+        
+        <form id="userForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="tel" id="phone" placeholder="Your Phone" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <button type="submit">Next</button>
+        </form>
+    </div>
+
+    <!-- ✅ External JS -->
+    <script src="script.js" type="module"></script>
+</body>
+</html>

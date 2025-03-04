@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Us Improve</title>
+    <link rel="stylesheet" href="improve.css">
+    <script src="script.js" type="module"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>We're Sorry! 😞</h2>
+        <p>We’d love to know what we can do better. Please share your thoughts below:</p>
+        
+        <form id="improveForm">
+            <div id="feedbackBox" contenteditable="true" class="static-box">
+                Tell us how we can improve...
+            </div>
+            
+            <button type="submit">Submit Feedback</button>
+        </form>
+        
+        <a href="index.html" class="cancel-button">
+            <button>Cancel</button>
+        </a>
+        
+    </div>
+
+    <!-- 🔥 Firebase SDK -->
+    <script type="module">
+        // ✅ Import Firebase Modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // ✅ Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFax_hk9d4qvGPrS3EHsf1ug2jIHpiZuI",
+            authDomain: "customerfeedbacksystem-2d20b.firebaseapp.com",
+            projectId: "customerfeedbacksystem-2d20b",
+            storageBucket: "customerfeedbacksystem-2d20b.appspot.com",
+            messagingSenderId: "258504629364",
+            appId: "1:258504629364:web:792fc57ac8161374748521",
+            measurementId: "G-9GJ32EF038"
+        };
+
+        // ✅ Initialize Firebase
+
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ✅ Handle Feedback Submission
+        document.getElementById("improveForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const feedback = document.getElementById("feedbackText").value;
+
+            try {
+                await addDoc(collection(db, "improvements"), {
+                    feedback: feedback,
+                    timestamp: serverTimestamp()
+                });
+                alert("Thank you! We appreciate your feedback.");
+                window.location.href = "index.html";
+            } catch (error) {
+                console.error("Error submitting feedback:", error);
+            }
+        });
+    </script>
+</body>
+</html>

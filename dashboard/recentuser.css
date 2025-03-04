@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #e3f2fd; /* Light Blue Background */
+    width: 100%;
+}
+
+.dashboard-wrapper {
+    width: 100%; /* Ensures full width */
+    text-align: center;
+    padding: 20px 0;
+}
+
+.container {
+    width: 90%; /* Allow more expansion */
+    max-width: 2200px; /* Ensure a reasonable max width */
+    margin: 20px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.table-wrapper {
+    width: 100%; /* Allow full width */
+    max-width: 100%; /* Ensure no restriction */
+    overflow-x: auto;
+}
+
+table {
+    width: 100%; /* Expand to full width */
+    min-width: 800px; /* Prevent it from being too small */
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+}
+
+th, td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+
+
+td {
+    color: #333;
+    background: #f8f9fa;
+}
+
+tr:nth-child(even) {
+    background: #e9f5e9; /* Light Green Row */
+}
+
+tr:hover {
+    background: #d4edda; /* Light Green Hover */
+    transition: 0.3s ease-in-out;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+    th, td {
+        padding: 10px;
+        font-size: 14px;
+    }
+    .table-wrapper {
+        overflow-x: auto; /* Enables scrolling on small screens */
+    }
+}
+
+.download-wrapper {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    margin-top: 10px;
+}
+
+#downloadExcel {
+    background-color: #28a745; /* Green color */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+#downloadExcel:hover {
+    background-color: #218838; /* Darker Green */
+}

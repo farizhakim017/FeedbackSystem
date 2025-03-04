@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+    <div id="loadingOverlay">Loading...</div>
+
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        <div class="table-container">
+            <table id="customersTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+
+            <table id="feedbackTable">
+                <thead>
+                    <tr>
+                        <th>Feedback</th>
+                    </tr>
+                </thead>
+                <tbody id="feedbackTableBody">
+                    <!-- Feedback data will be inserted here -->
+                </tbody>
+            </table>
+            <p>Click the table for more!</p>
+        </div>
+
+        <h2>Overviews</h2>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <h3>Total Feedback</h3>
+                <p id="total-feedback">0</p>
+            </div>
+            <div class="stat-box">
+                <h3>Average Rating</h3>
+                <p id="average-rating">0</p>
+            </div>
+        </div>
+
+        <h2>Ratings Breakdown</h2>
+        <div class="ratings-container">
+            <div class="rating-box" id="very-not-satisfied">
+                <h4>😡 Very Not Satisfied</h4>
+                <p>Count: <span id="count-very-not-satisfied">0</span></p>
+            </div>
+            <div class="rating-box" id="not-satisfied">
+                <h4>😞 Not Satisfied</h4>
+                <p>Count: <span id="count-not-satisfied">0</span></p>
+            </div>
+            <div class="rating-box" id="decent">
+                <h4>😐 Decent</h4>
+                <p>Count: <span id="count-decent">0</span></p>
+            </div>
+            <div class="rating-box" id="good">
+                <h4>😊 Good</h4>
+                <p>Count: <span id="count-good">0</span></p>
+            </div>
+            <div class="rating-box" id="excellent">
+                <h4>😁 Excellent</h4>
+                <p>Count: <span id="count-excellent">0</span></p>
+            </div>
+        </div>
+
+        <h2>Questionnaire Results</h2>
+        <div class="questions-container">
+            <div class="question-box" id="courteous-friendly-staff">
+                <h4>Courteous & Friendly Staff? 👤</h4>
+                <p>Average Rating: <span id="courteous-friendly-staff-rating">0</span></p>
+            </div>
+            <div class="question-box" id="prompt-clear-information">
+                <h4>Prompt & Clear Information? ℹ️</h4>
+                <p>Average Rating: <span id="prompt-clear-information-rating">0</span></p>
+            </div>
+            <div class="question-box" id="cleanliness-facility">
+                <h4>Cleanliness of Facility? 🫧</h4>
+                <p>Average Rating: <span id="cleanliness-facility-rating">0</span></p>
+            </div>
+            <div class="question-box" id="washrooms">
+                <h4>Washrooms? 🚽🚻</h4>
+                <p>Average Rating: <span id="washrooms-rating">0</span></p>
+            </div>
+            <div class="question-box" id="air-conditioning">
+                <h4>Air Conditioning? ❄️</h4>
+                <p>Average Rating: <span id="air-conditioning-rating">0</span></p>
+            </div>
+            <div class="question-box" id="medical-equipment">
+                <h4>Medical Equipment? 🩺</h4>
+                <p>Average Rating: <span id="medical-equipment-rating">0</span></p>
+            </div>
+            <div class="question-box" id="waiting-time">
+                <h4>Your waiting time? ⌛</h4>
+                <p>Average Rating: <span id="waiting-time-rating">0</span></p>
+            </div>
+            <div class="question-box" id="overall-experience">
+                <h4>How was your overall experience? 🤔</h4>
+                <p>Average Rating: <span id="overall-experience-rating">0</span></p>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="dashboard.js"></script>
+</body>
+
+</html>

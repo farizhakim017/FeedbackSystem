@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
+    <link rel="stylesheet" href="success.css">
+</head>
+<body>
+    <div class="container-wrapper">
+        <div class="card container fade-in">
+            <img src="source/feedback.gif" width="200px">
+            <img src="source/starsstars.png" width="200px">
+        </div>
+
+        <div class="card fade-in container2">
+            <h2>Thank You for Your Feedback!🙏😌</h2>
+            <p>Would you mind helping to rate us on Google Review?</p>
+            <img src="source/cc review.png" width="300px">
+            <button id="submitAnother">Submit Another Response</button>
+        </div>
+        
+
+    </div>
+
+    <script>
+        document.getElementById("submitAnother").addEventListener("click", function () {
+            window.location.href = "index.html"; // Redirect to index.html
+        });
+
+        document.getElementById("followUs").addEventListener("click", function () {
+            window.location.href = "https://your-social-media-link.com"; // Replace with actual link
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // Function to launch confetti
+        function launchConfetti() {
+            var duration = 3 * 1000; // Confetti duration (3 seconds)
+            var end = Date.now() + duration;
+    
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 } // Left side
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 } // Right side
+                });
+    
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+    
+        // Run confetti when page loads
+        window.onload = launchConfetti;
+    </script>
+    
+</body>
+
+</html>
