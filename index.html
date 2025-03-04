@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Feedback</title>
     <link rel="stylesheet" href="styles.css">
 
-    <!-- 🔥 Firebase SDK (Add this if using Firebase) -->
+    <!-- 🔥 Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDFax_hk9d4qvGPrS3EHsf1ug2jIHpiZuI",
@@ -21,20 +22,93 @@
             measurementId: "G-9GJ32EF038"
         };
 
-        initializeApp(firebaseConfig);
-        const db = getFirestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const clinicSelect = document.getElementById("clinic");
+            const nextButton = document.querySelector("button[type='submit']");
+
+            function checkInputs() {
+                const name = document.getElementById("name").value.trim();
+                const phone = document.getElementById("phone").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const clinic = document.getElementById("clinic").value.trim();
+
+                nextButton.disabled = !(name && phone && email && clinic);
+            }
+
+            document.getElementById("name").addEventListener("input", checkInputs);
+            document.getElementById("phone").addEventListener("input", checkInputs);
+            document.getElementById("email").addEventListener("input", checkInputs);
+            clinicSelect.addEventListener("input", checkInputs);
+            checkInputs();
+
+            // Load clinic from local storage
+            const savedClinic = localStorage.getItem("selectedClinic");
+            if (savedClinic) {
+                clinicSelect.value = savedClinic;
+            }
+
+            // Save selected clinic to local storage
+            clinicSelect.addEventListener("change", () => {
+                localStorage.setItem("selectedClinic", clinicSelect.value);
+            });
+
+            document.getElementById("userForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById("name").value.trim();
+                const phone = document.getElementById("phone").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const clinic = document.getElementById("clinic").value.trim();
+
+                try {
+                    const clinicRef = collection(db, `clinics/${clinic}/users`);
+                    await addDoc(clinicRef, { name, phone, email, timestamp: new Date() });
+
+                    // Redirect to rating page after successful submission
+                    window.location.href = "rating.html";
+                } catch (error) {
+                    console.error("Error submitting feedback:", error);
+                }
+            });
+        });
     </script>
 </head>
+
 <body>
     <div class="card">
         <div>
             <h1 class="fade-text" id="header"></h1>
             <p>Give us your best Feedback 😎</p>
+        </div>
+
+        <form id="userForm">
+            <button id="selectClinicBtn" type="button">Select Clinic</button>
+            <input type="hidden" id="clinic" required>
+
+            <div class="modal-overlay" id="modalOverlay"></div>
+            <div class="modal" id="clinicModal">
+                <div class="modal-header">Select Your Clinic</div>
+                <div class="clinic-option" data-clinic="KlinikFamily">Klinik Family</div>
+                <div class="clinic-option" data-clinic="PKC Cheras">PKC Cheras</div>
+                <div class="clinic-option" data-clinic="PKC Desa Pandan">PKC Desa Pandan</div>
+                <div class="clinic-option" data-clinic="Klinik Damai">Klinik Damai</div>
+                <button class="close-btn" type="button">Close</button>
+            </div>
+            <input type="text" id="name" placeholder="Your Name">
+            <input type="tel" id="phone" placeholder="Your Phone">
+            <input type="email" id="email" placeholder="Your Email">
+            <button type="submit" disabled>Next</button>
+        </form>
+    </div>
+
     <script>
-        const headers = ["Welcome to Careclinics","We want to hear from you", "Come on! Rate us..", "Anything we can improve?", "We want to hear from you"];
+        const headers = ["Welcome to Careclinics", "We want to hear from you", "Come on! Rate us..", "Anything we can improve?", "We want to hear from you"];
         let index = 0;
         const headerElement = document.getElementById("header");
-        
+
         function changeHeader() {
             headerElement.style.opacity = 0;
             setTimeout(() => {
@@ -42,22 +116,48 @@
                 headerElement.style.opacity = 1;
                 index = (index + 1) % headers.length;
             }, 1000);
-            setTimeout(changeHeader, 6000); // Change header every 4 seconds
+            setTimeout(changeHeader, 6000);
         }
-        
         changeHeader();
-    </script>
-        </div>
-        
-        <form id="userForm">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <input type="tel" id="phone" placeholder="Your Phone" required>
-            <input type="email" id="email" placeholder="Your Email" required>
-            <button type="submit">Next</button>
-        </form>
-    </div>
 
-    <!-- ✅ External JS -->
-    <script src="script.js" type="module"></script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("clinicModal");
+            const overlay = document.getElementById("modalOverlay");
+            const clinicOptions = document.querySelectorAll(".clinic-option");
+            const selectClinicBtn = document.getElementById("selectClinicBtn");
+            const clinicInput = document.getElementById("clinic");
+
+            function openModal() {
+                modal.style.display = "block";
+                overlay.style.display = "block";
+            }
+
+            function closeModal() {
+                modal.style.display = "none";
+                overlay.style.display = "none";
+            }
+
+            selectClinicBtn.addEventListener("click", openModal);
+            overlay.addEventListener("click", closeModal);
+            document.querySelector(".close-btn").addEventListener("click", closeModal);
+
+            const savedClinic = localStorage.getItem("selectedClinic");
+            if (savedClinic) {
+                clinicInput.value = savedClinic;
+                selectClinicBtn.innerText = "Clinic: " + savedClinic;
+            }
+
+            clinicOptions.forEach(option => {
+                option.addEventListener("click", () => {
+                    const selectedClinic = option.dataset.clinic;
+                    clinicInput.value = selectedClinic;
+                    localStorage.setItem("selectedClinic", selectedClinic);
+                    selectClinicBtn.innerText = "Clinic: " + selectedClinic;
+                    closeModal();
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>

@@ -59,11 +59,14 @@
             appId: "1:258504629364:web:792fc57ac8161374748521",
             measurementId: "G-9GJ32EF038"
         };
-
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        console.log("Firebase initialized:", firebase.apps.length > 0);
+        let selectedClinic = localStorage.getItem("selectedClinic");
+        if (!selectedClinic) {
+            alert("Error: No clinic selected.");
+        }
 
         // 🎯 Questions List
         const questions = [
@@ -79,30 +82,25 @@
 
         let currentQuestion = 0;
         let selectedRating = null;
-        let responses = [];
+        let responses = {};
 
         const questionText = document.getElementById("question-text");
         const options = document.querySelectorAll(".option");
         const submitButton = document.getElementById("submitFeedback");
         const progressBar = document.querySelector(".progress-bar");
 
-        // 🏁 Load First Question
         function loadQuestion() {
             if (currentQuestion < questions.length) {
                 questionText.textContent = questions[currentQuestion];
                 submitButton.disabled = true;
                 selectedRating = null;
                 options.forEach(option => option.classList.remove("selected"));
-
-                // 📊 Update progress bar
-                let progress = ((currentQuestion + 1) / questions.length) * 100;
-                progressBar.style.width = progress + "%";
+                progressBar.style.width = ((currentQuestion + 1) / questions.length) * 100 + "%";
             } else {
-                saveResponses();  // 📝 Save responses when done
+                saveResponses();
             }
         }
 
-        // ⭐ Handle Selection
         options.forEach(option => {
             option.addEventListener("click", function () {
                 selectedRating = parseInt(this.getAttribute("data-value"));
@@ -112,44 +110,40 @@
             });
         });
 
-        // 🚀 Submit Answer & Go to Next Question
         submitButton.addEventListener("click", function () {
             if (selectedRating !== null) {
-                responses.push(selectedRating);
+                const categories = [
+                    "staff_feedback", "info_feedback", "cleanliness_feedback", "washroom_feedback",
+                    "aircon_feedback", "equipment_feedback", "waiting_time_feedback", "overall_experience_feedback"
+                ];
+                responses[categories[currentQuestion]] = selectedRating;
                 currentQuestion++;
-                loadQuestion();
+                if (currentQuestion < questions.length) {
+                    loadQuestion();
+                } else {
+                    saveResponses();
+                }
             }
         });
 
-        // 🔥 Save Responses to Firestore
         function saveResponses() {
-            db.collection("feedback").add({
+            db.collection("clinics").doc(selectedClinic).collection("feedback").add({
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                responses: responses
-            })
-            .then(() => {
-                console.log("Responses saved successfully!");
+                ...responses
+            }).then(() => {
                 evaluateResponses();
-            })
-            .catch(error => {
-                console.error("Error saving responses:", error);
+            }).catch(error => {
+                console.error("Error saving feedback:", error);
                 alert("Error: " + error.message);
             });
         }
 
-        // 📊 Evaluate User Responses
         function evaluateResponses() {
-            let positiveResponses = responses.filter(score => score >= 4).length;
+            let positiveResponses = Object.values(responses).filter(score => score >= 4).length;
             let majorityPositive = positiveResponses >= Math.ceil(questions.length / 2);
-
-            if (majorityPositive) { 
-                window.location.href = "success.html";
-            } else {
-                window.location.href = "improve.html";
-            }
+            window.location.href = majorityPositive ? "success.html" : "improve.html";
         }
 
-        // 🏁 Start Survey
         loadQuestion();
     </script>
 </body>

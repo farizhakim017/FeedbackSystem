@@ -1,9 +1,10 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { get, getDatabase, ref } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+// 🔥 Import Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { collection, getDocs, getFirestore, limit, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Your Firebase configuration
+// ✅ Initialize Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyDFax_hk9d4qvGPrS3EHsf1ug2jIHpiZuI",
+    apiKey: "AIzaSyDFax_hk9...",
     authDomain: "customerfeedbacksystem-2d20b.firebaseapp.com",
     projectId: "customerfeedbacksystem-2d20b",
     storageBucket: "customerfeedbacksystem-2d20b.appspot.com",
@@ -12,36 +13,43 @@ const firebaseConfig = {
     measurementId: "G-9GJ32EF038"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db = getFirestore(app);
 
+// 📌 Fetch & Display Total Feedback and Average Rating
 async function fetchFeedbackStats() {
+    const totalFeedbackElement = document.getElementById("total-feedback");
+    const avgRatingElement = document.getElementById("average-rating");
+
     try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, "feedbackStats"));
-        
-        if (snapshot.exists()) {
-            console.log("Feedback Stats:", snapshot.val());
-        } else {
-            console.log("No data available");
-        }
+        const querySnapshot = await getDocs(collection(db, "improvements"));
+        let totalFeedback = querySnapshot.size;
+        let totalRating = 0;
+        let ratingCount = 0;
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.rating !== undefined && !isNaN(data.rating)) {
+                totalRating += Number(data.rating);
+                ratingCount++;
+            }
+        });
+
+        const averageRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : "N/A";
+
+        totalFeedbackElement.textContent = totalFeedback;
+        avgRatingElement.textContent = averageRating;
+
+        console.log("Feedback stats loaded successfully!", { totalFeedback, averageRating });
     } catch (error) {
         console.error("Error fetching feedback stats:", error);
     }
 }
 
-// Call the function
-fetchFeedbackStats();
-
-// Call the function to fetch data
-fetchFeedbackStats();
-
-
 // 📌 Fetch & Display the 3 Most Recent Users
 async function fetchRecentCustomers() {
     const customersTable = document.getElementById("customersTableBody");
-    customersTable.innerHTML = "";
+    customersTable.innerHTML = ""; 
 
     try {
         const querySnapshot = await getDocs(
@@ -59,6 +67,8 @@ async function fetchRecentCustomers() {
             `;
             customersTable.innerHTML += row;
         });
+
+        console.log("Recent 3 customers loaded successfully!");
     } catch (error) {
         console.error("Error fetching recent customers:", error);
     }
@@ -79,6 +89,8 @@ async function fetchRecentFeedbacks() {
             const row = `<tr><td>${data.feedback || "No Feedback"}</td></tr>`;
             feedbackTable.innerHTML += row;
         });
+
+        console.log("Recent 3 feedbacks loaded successfully!");
     } catch (error) {
         console.error("Error fetching recent feedbacks:", error);
     }
@@ -116,6 +128,8 @@ async function fetchRatingsBreakdown() {
         document.getElementById("count-decent").textContent = ratingCounts["decent"];
         document.getElementById("count-good").textContent = ratingCounts["good"];
         document.getElementById("count-excellent").textContent = ratingCounts["excellent"];
+
+        console.log("Ratings breakdown loaded successfully!", ratingCounts);
     } catch (error) {
         console.error("Error fetching ratings breakdown:", error);
     }
@@ -123,33 +137,40 @@ async function fetchRatingsBreakdown() {
 
 // 📌 Fetch & Display Questionnaire Results
 async function fetchQuestionnaireResults() {
-    const questionTotals = {};
+    const questionTotals = {
+        "courteous-friendly-staff": { sum: 0, count: 0 },
+        "prompt-clear-information": { sum: 0, count: 0 }
+    };
 
     try {
         const querySnapshot = await getDocs(collection(db, "improvements"));
 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            Object.keys(data).forEach((key) => {
-                if (key.includes("Rating") && !isNaN(data[key])) {
-                    if (!questionTotals[key]) {
-                        questionTotals[key] = { sum: 0, count: 0 };
-                    }
-                    questionTotals[key].sum += Number(data[key]);
-                    questionTotals[key].count++;
-                }
-            });
-        });
-
-        Object.keys(questionTotals).forEach((questionKey) => {
-            const avgRating = questionTotals[questionKey].count > 0
-                ? (questionTotals[questionKey].sum / questionTotals[questionKey].count).toFixed(1)
-                : "N/A";
-            const element = document.getElementById(`${questionKey}-rating`);
-            if (element) {
-                element.textContent = avgRating;
+            if (data.staffRating !== undefined) {
+                questionTotals["courteous-friendly-staff"].sum += Number(data.staffRating);
+                questionTotals["courteous-friendly-staff"].count++;
+            }
+            if (data.informationRating !== undefined) {
+                questionTotals["prompt-clear-information"].sum += Number(data.informationRating);
+                questionTotals["prompt-clear-information"].count++;
             }
         });
+
+        // Calculate Averages
+        const staffAvg = questionTotals["courteous-friendly-staff"].count > 0
+            ? (questionTotals["courteous-friendly-staff"].sum / questionTotals["courteous-friendly-staff"].count).toFixed(1)
+            : "N/A";
+
+        const infoAvg = questionTotals["prompt-clear-information"].count > 0
+            ? (questionTotals["prompt-clear-information"].sum / questionTotals["prompt-clear-information"].count).toFixed(1)
+            : "N/A";
+
+        // Update UI
+        document.getElementById("courteous-friendly-staff-rating").textContent = staffAvg;
+        document.getElementById("prompt-clear-information-rating").textContent = infoAvg;
+
+        console.log("Questionnaire results loaded successfully!", questionTotals);
     } catch (error) {
         console.error("Error fetching questionnaire results:", error);
     }
@@ -175,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         await fetchFeedbackStats();
         await fetchRatingsBreakdown();
         await fetchQuestionnaireResults();
-        
+
         loadingOverlay.style.display = "none";
         dashboardContainer.style.display = "block";
     }, 100);

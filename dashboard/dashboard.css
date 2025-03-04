@@ -8,183 +8,80 @@ body {
     flex-direction: column;
     align-items: center;
     margin: 0;
-    padding: 20px;
+    padding: 5px;
+    overflow-x: hidden;
 }
 
-p{
+p {
     margin-top: 2px;
 }
+
 /* Title */
 h1 {
-    font-size: 28px;
+    font-size: 48px;
     font-weight: 600;
     text-transform: uppercase;
     border-bottom: 3px solid black;
     padding-bottom: 5px;
     text-align: center;
     letter-spacing: 1px;
+    margin-bottom: 20px;
 }
 
-h2{
-    margin-top: 50px;
-}
-
-/* Dashboard Container */
-.dashboard-container {
-    width: 90%;
-    max-width: 1200px;
+h2 {
+    margin-top: 30px;
     text-align: center;
-    display: none; /* Hidden until loading is complete */
 }
 
-/* Stats Section */
-.stats-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.stat-box {
-    background: white;
-    padding: 20px;
-    border: 2px solid black;
-    border-radius: 10px;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 48%;
-    max-width: 280px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.stat-box:hover {
-    transform: translateY(-3px);
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.stat-box h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.stat-box p {
-    font-size: 24px;
-    font-weight: bold;
-    color: #007bff;
-}
-
-/* Ratings Breakdown */
-.ratings-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.rating-box {
-    background: white;
-    padding: 15px;
-    border: 2px solid black;
-    border-radius: 8px;
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 160px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.rating-box:hover {
-    transform: translateY(-3px);
-    box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.2);
-}
-
-.rating-box h4 {
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.rating-box p {
-    font-size: 20px;
-    font-weight: bold;
-    color: #28a745;
-}
-
-/* Questionnaire Results */
-.questions-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.question-box {
-    background: white;
-    padding: 15px;
-    border: 2px solid black;
-    border-radius: 8px;
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 250px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.question-box:hover {
-    transform: translateY(-3px);
-    box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.2);
-}
-
-.question-box h4 {
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.question-box p {
-    font-size: 20px;
-    font-weight: bold;
-    color: #dc3545;
-}
-
-/* Tables */
+/* Table Container */
 .table-container {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-top: 20px;
+    width: 90%;
+    margin: 0 auto;
+    overflow-x: auto;
 }
 
-table {
-    border-collapse: collapse;
+#recent-users-table {
     width: 100%;
-    max-width: 500px;
-    background-color: #fff;
+    border-collapse: collapse;
+    background: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-th {
-    background-color: #000000;
-    color: white;
-    text-align: left;
-    padding: 12px;
-}
-
-td {
+#recent-users-table th, #recent-users-table td {
     padding: 10px;
+    text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+#recent-users-table th {
+    background: #3498db;
+    color: white;
 }
 
-tbody tr:hover {
-    background-color: #ddd;
-    transition: 0.3s;
+#recent-users-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+/* View More Button */
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #2ecc71, #3498db);
+    transform: scale(1.05);
 }
 
 /* Loading Overlay */
@@ -214,6 +111,99 @@ tbody tr:hover {
     .stat-box,
     .rating-box,
     .question-box {
-        width: 90%;
+        width: 95%;
     }
+}
+
+/* Chart Container */
+.chart-container {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+    margin: 15px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#feedbackChart {
+    width: 100% !important;
+    max-width: 700px;
+    height: 350px !important;
+}
+
+/* Feedback Table */
+#feedback-table {
+    width: 100%;
+    max-width: 800px;
+    font-size: 16px;
+    border-collapse: collapse;
+    margin: 15px auto;
+}
+
+#feedback-table th, #feedback-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#feedback-table th {
+    background-color: #3498db;
+    color: white;
+}
+
+#feedback-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#feedback-table tbody tr:hover {
+    background-color: #ddd;
+}
+
+/* Overall Satisfaction */
+.overall-satisfaction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+}
+
+#positive-feedback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2ecc71, #3498db);
+    box-shadow: 0px 0px 20px rgba(46, 204, 113, 0.7);
+    border: 2px solid transparent;
+    transition: all 0.4s ease-in-out;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: fancyGlow 2s infinite alternate;
+}
+
+.positive-feedback-container strong {
+    font-size: 20px;
+    color: #333;
+    margin-right: 6px;
+    gap: 50px;
+}
+
+#positive-feedback:hover {
+    transform: scale(1.08);
+    background: linear-gradient(135deg, #27ae60, #2980b9);
+    box-shadow: 0px 0px 35px rgb(255, 255, 255);
+}
+
+@keyframes fancyGlow {
+    0% { box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5); }
+    100% { box-shadow: 0px 0px 25px rgb(255, 255, 255); }
 }
