@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You</title>
     <link rel="stylesheet" href="success.css">
 </head>
+
 <body>
     <div class="container-wrapper">
         <div class="card container fade-in">
@@ -16,10 +18,10 @@
         <div class="card fade-in container2">
             <h2>Thank You for Your Feedback!🙏😌</h2>
             <p>Would you mind helping to rate us on Google Review?</p>
-            <img src="source/cc review.png" width="300px">
+            <img id="qrCodeImage" src="" width="300px">
             <button id="submitAnother">Submit Another Response</button>
         </div>
-        
+
 
     </div>
 
@@ -38,7 +40,7 @@
         function launchConfetti() {
             var duration = 3 * 1000; // Confetti duration (3 seconds)
             var end = Date.now() + duration;
-    
+
             (function frame() {
                 confetti({
                     particleCount: 5,
@@ -52,17 +54,38 @@
                     spread: 55,
                     origin: { x: 1 } // Right side
                 });
-    
+
                 if (Date.now() < end) {
                     requestAnimationFrame(frame);
                 }
             })();
         }
-    
+
         // Run confetti when page loads
         window.onload = launchConfetti;
+
+        // Clinic QR Code mapping
+        const clinicQRCodes = {
+            "KWS Damansara": "source/KWSDamansara-Reviews.png",
+            "PKC Cheras": "source/PKCCheras-Reviews.png",
+            "PKC Desa Pandan": "source/clinic3_qr.png",
+            "Klinik Damai Sungai Buloh": "source/DamaiSgBuloh-Reviews.png",
+        };
+
+        // Retrieve selected clinic from localStorage
+        let selectedClinic = localStorage.getItem("selectedClinic");
+
+        // Get QR code image element
+        const qrCodeImage = document.getElementById("qrCodeImage");
+
+        // Set the QR code image source dynamically
+        if (selectedClinic && clinicQRCodes[selectedClinic]) {
+            qrCodeImage.src = clinicQRCodes[selectedClinic];
+        } else {
+            qrCodeImage.src = "source/cc review.png"; 
+        }
     </script>
-    
+
 </body>
 
 </html>

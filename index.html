@@ -87,16 +87,34 @@
         <form id="userForm">
             <button id="selectClinicBtn" type="button">Select Clinic</button>
             <input type="hidden" id="clinic" required>
-
             <div class="modal-overlay" id="modalOverlay"></div>
             <div class="modal" id="clinicModal">
                 <div class="modal-header">Select Your Clinic</div>
-                <div class="clinic-option" data-clinic="KlinikFamily">Klinik Family</div>
-                <div class="clinic-option" data-clinic="PKC Cheras">PKC Cheras</div>
-                <div class="clinic-option" data-clinic="PKC Desa Pandan">PKC Desa Pandan</div>
-                <div class="clinic-option" data-clinic="Klinik Damai">Klinik Damai</div>
+
+                <!-- Search Bar -->
+                <input type="text" id="clinicSearch" placeholder="Search clinic..." class="search-bar">
+
+                <!-- Scrollable Clinic List -->
+                <div class="clinic-list" id="clinicList">
+                    <div class="clinic-option" data-clinic="KWS Damansara">KWS Damansara</div>
+                    <div class="clinic-option" data-clinic="PKC Cheras">PKC Cheras</div>
+                    <div class="clinic-option" data-clinic="PKC Desa Pandan">PKC Desa Pandan</div>
+                    <div class="clinic-option" data-clinic="PKC Putrajaya">PKC Putrajaya</div>
+                    <div class="clinic-option" data-clinic="Klinik Damai Sungai Buloh">Klinik Damai Sungai Buloh</div>
+                    <div class="clinic-option" data-clinic="KSI Samudra">KSI Samudra</div>
+                    <div class="clinic-option" data-clinic="Klinik KIP">Klinik KIP</div>
+                    <div class="clinic-option" data-clinic="One Medic Gul">One Medic Gul</div>
+                    <div class="clinic-option" data-clinic="MUC Bukit Bintang">MUC Bukit Bintang</div>
+                    <div class="clinic-option" data-clinic="MUC Labu">MUC Labu</div>
+                    <div class="clinic-option" data-clinic="Menara KLIA1">Menara KLIA1</div>
+                    <div class="clinic-option" data-clinic="Menara KLIA2">Menara KLIA2</div>
+                    <div class="clinic-option" data-clinic="Poliklinik Dinamik">Poliklinik Dinamik</div>
+                </div>
+
                 <button class="close-btn" type="button">Close</button>
             </div>
+
+
             <input type="text" id="name" placeholder="Your Name">
             <input type="tel" id="phone" placeholder="Your Phone">
             <input type="email" id="email" placeholder="Your Email">
@@ -156,6 +174,22 @@
                     closeModal();
                 });
             });
+
+            /*Clinics Option Bar Pencarian hehehe*/
+            document.getElementById("clinicSearch").addEventListener("input", function () {
+                let filter = this.value.toLowerCase();
+                let clinics = document.querySelectorAll(".clinic-option");
+
+                clinics.forEach(function (clinic) {
+                    let clinicName = clinic.textContent.toLowerCase();
+                    if (clinicName.includes(filter)) {
+                        clinic.style.display = "block";
+                    } else {
+                        clinic.style.display = "none";
+                    }
+                });
+            });
+
         });
     </script>
 </body>

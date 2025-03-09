@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="rating.css">
 </head>
+
 <body>
     <div class="border">
         <div class="progress-container">
@@ -59,7 +61,7 @@
             appId: "1:258504629364:web:792fc57ac8161374748521",
             measurementId: "G-9GJ32EF038"
         };
-        
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -95,11 +97,15 @@
                 submitButton.disabled = true;
                 selectedRating = null;
                 options.forEach(option => option.classList.remove("selected"));
-                progressBar.style.width = ((currentQuestion + 1) / questions.length) * 100 + "%";
+
+                // Progress bar calculation: Ensure it starts at 0% and ends at 100%
+                let progress = (currentQuestion / (questions.length - 1)) * 100;
+                progressBar.style.width = progress + "%";
             } else {
                 saveResponses();
             }
         }
+
 
         options.forEach(option => {
             option.addEventListener("click", function () {
@@ -147,4 +153,5 @@
         loadQuestion();
     </script>
 </body>
+
 </html>
