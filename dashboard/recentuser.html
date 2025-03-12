@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="recentuser.css">
+    <title>Recent Users</title>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Excel Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script type="module" src="recentuser.js"></script>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="recentuser.css">
 </head>
 <body>
+    <div class="container">
+        <h1 class="title">Recent Customer Feedback</h1>
+        <p>Selected Clinic: <span id="selected-clinic">None</span></p>
 
-<div class="dashboard-wrapper">
-    <h1>Careclinics's Customer Feedback Dashboard</h1>
-</div>
+        <div class="table-container">
+            <table id="recent-users-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
 
-<!-- Separate the container to prevent it from inheriting width -->
-<div class="container">
-    <h2>Recent Customers</h2>
-    <div class="table-wrapper">
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>User Name</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody id="customersTableBody">
-                <!-- Data will be inserted here -->
-            </tbody>
-        </table>
+        <button id="downloadExcel" class="download-btn">Download Excel</button>
+        <button onclick="window.location.href='dashboard.html'" class="back-btn">Back to Dashboard</button>
     </div>
-    <div class="download-wrapper">
-        <button id="downloadExcel">Download Excel</button>
-    </div>
-    
-</div>
 
-
-
+    <!-- JS File -->
+    <script src="recentuser.js" type="module"></script>
 </body>
 </html>

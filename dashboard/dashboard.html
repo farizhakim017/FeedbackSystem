@@ -9,6 +9,9 @@
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,157 +23,137 @@
 <body>
 
     <div class="container">
-        <h1>Feedback Dashboard</h1>
-
-        <!-- ✅ Recent Users Table (New Addition) -->
-        <h2>Recent Users</h2>
-        <div class="table-container">
-            <table id="recent-users-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+        <div class="header-container">
+            <h1 class="title">Careclinics Patients Feedback Dashboard</h1>
+            <button id="selectClinicBtn" class="btn">Select Clinic</button>
         </div>
-        <button onclick="window.location.href='recentuser.html'">View More</button>
 
-        <h2>Feedback Distribution</h2>
-        <div class="chart-container">
+        <input type="hidden" id="clinic" required>
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal" id="clinicModal">
+            <div class="modal-header">Select Your Clinic</div>
+
+            <!-- Search Bar -->
+            <input type="text" id="clinicSearch" placeholder="Search clinic..." class="search-bar">
+
+            <!-- Scrollable Clinic List -->
+            <div class="clinic-list" id="clinicList">
+                <div class="clinic-option" data-clinic="KWS Damansara">KWS Damansara</div>
+                <div class="clinic-option" data-clinic="PKC Cheras">PKC Cheras</div>
+                <div class="clinic-option" data-clinic="PKC Desa Pandan">PKC Desa Pandan</div>
+                <div class="clinic-option" data-clinic="PKC Putrajaya">PKC Putrajaya</div>
+                <div class="clinic-option" data-clinic="Klinik Damai Sungai Buloh">Klinik Damai Sungai Buloh</div>
+                <div class="clinic-option" data-clinic="KSI Samudra">KSI Samudra</div>
+                <div class="clinic-option" data-clinic="Klinik KIP">Klinik KIP</div>
+                <div class="clinic-option" data-clinic="One Medic Gul">One Medic Gul</div>
+                <div class="clinic-option" data-clinic="MUC Bukit Bintang">MUC Bukit Bintang</div>
+                <div class="clinic-option" data-clinic="MUC Labu">MUC Labu</div>
+                <div class="clinic-option" data-clinic="Menara KLIA1">Menara KLIA1</div>
+                <div class="clinic-option" data-clinic="Menara KLIA2">Menara KLIA2</div>
+                <div class="clinic-option" data-clinic="Poliklinik Dinamik">Poliklinik Dinamik</div>
+            </div>
+
+            <button class="close-btn neumorphic-btn" type="button">Close</button>
+        </div>
+
+        <!-- Recent Users -->
+        <div class="box recent-users">
+            <h2>Recent Patients</h2>
+            <div class="table-container">
+                <table id="recent-users-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="view-more-container">
+                <button id="viewMoreUsersBtn" class="view-more-btn">View More</button>
+
+            </div>
+        </div>
+
+        <!-- Recent Users Popup -->
+        <div id="recentUsersPopup" class="popup-container">
+            <div class="popup-content">
+                <span class="popup-close">&times;</span>
+                <h2>All Patients</h2>
+                <table id="all-users-popup-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+        <!-- Feedback Chart -->
+        <div class="box chart-box">
+            <h2>Feedback Distribution</h2>
             <canvas id="feedbackChart"></canvas>
         </div>
 
+        <!-- Total Feedbacks -->
+        <div class="box feedback-summary">
+            <h2>What can we improve?</h2>
+            <p>Based on customer feedback about what we should improve.</p>
+            <div id="customersays">
+                <table id="improvementsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Improvement Suggestion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <button id="viewAllBtn" class="view-all-btn">View All Improvements</button>
+        </div>
 
-        <p><strong>Total Feedbacks:</strong> <span id="total-feedback">Loading...</span></p>
-
-
-        <h2>Overall Satisfaction</h2>
-        <div class="positive-feedback-container">
-            <p><strong>Positive Feedback:</strong> <span id="positive-feedback">Loading...</span> </p>
+        <!-- Floating Modal for Full List of Improvements -->
+        <div id="improvementModal" class="modal-improve">
+            <div class="modal-overlay"></div> <!-- Background Blur Effect -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>🚀 All Improvement Suggestions</h2>
+                <ul id="fullImprovementList"></ul>
+            </div>
         </div>
         
-        <h2>Average Ratings Per Question</h2>
-        <table id="feedback-table">
-            <thead>
-                <tr>
-                    <th>Question</th>
-                    <th>Average Rating</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+
+        <!-- Average Ratings Per Question -->
+        <div class="box ratings">
+            <h2>Average Ratings Per Question</h2>
+            <div id="feedback-container"></div>
+        </div>
+
+
+        <!-- Positive Feedback -->
+        <div class="box positive-feedback">
+            <h2>Overall Satisfaction</h2>
+            <p><strong>Positive Feedback:</strong> <span id="positive-feedback">Loading...</span></p>
+            <p><strong>Total Feedbacks:</strong> <span id="total-feedback">Loading...</span></p>
+        </div>
     </div>
 
+    <!-- JS File -->
     <script src="dashboard.js" type="module"></script>
 
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDFax_hk9d4qvGPrS3EHsf1ug2jIHpiZuI",
-            authDomain: "customerfeedbacksystem-2d20b.firebaseapp.com",
-            projectId: "customerfeedbacksystem-2d20b",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Questions
-        const questions = [
-            "Courteous & Friendly Staff?",
-            "Prompt & Clear Information?",
-            "Cleanliness of Facility?",
-            "Washrooms?",
-            "Air Conditioning?",
-            "Medical Equipment?",
-            "Your waiting time?",
-            "Overall experience?"
-        ];
-
-        let feedbackCount = 0;
-        let questionSums = Array(questions.length).fill(0);
-        let feedbackChart;
-
-        function fetchFeedbackData() {
-            db.collection("feedback").get().then(snapshot => {
-                feedbackCount = snapshot.size;
-                let ratingsCount = Array(5).fill(0);
-
-                snapshot.forEach(doc => {
-                    let responses = doc.data().responses;
-                    responses.forEach((rating, index) => {
-                        questionSums[index] += rating;
-                        ratingsCount[rating - 1]++;
-                    });
-                });
-
-                updateDashboard(ratingsCount);
-            });
-        }
-
-        function updateDashboard(ratingsCount) {
-            document.getElementById("total-feedback").textContent = feedbackCount;
-            let positiveResponses = 0;
-
-            let tableBody = document.querySelector("#feedback-table tbody");
-            tableBody.innerHTML = "";
-
-            questionSums.forEach((sum, index) => {
-                let avg = feedbackCount ? (sum / feedbackCount).toFixed(2) : 0;
-                let row = `<tr><td>${questions[index]}</td><td>${avg}</td></tr>`;
-                tableBody.innerHTML += row;
-                if (avg >= 4) positiveResponses++;
-            });
-
-            let positivePercentage = ((positiveResponses / questions.length) * 100).toFixed(2);
-            document.getElementById("positive-feedback").textContent = positivePercentage;
-
-            generateChart(ratingsCount);
-        }
-
-        function generateChart(ratingsCount) {
-            let ctx = document.getElementById("feedbackChart").getContext("2d");
-            if (feedbackChart) feedbackChart.destroy();
-            feedbackChart = new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: ["😡 Very Not Satisfied", "😞 Not Satisfied", "😐 Decent", "😊 Good", "😍 Excellent"],
-                    datasets: [{
-                        label: "Number of Ratings",
-                        data: ratingsCount,
-                        backgroundColor: ["#e74c3c", "#f39c12", "#f1c40f", "#2ecc71", "#3498db"],
-                    }]
-                }
-            });
-        }
-
-        fetchFeedbackData();
-
-        // ✅ Fetch Recent Users (New Addition)
-        function fetchRecentUsers() {
-            db.collection("users")
-                .orderBy("timestamp", "desc")
-                .limit(3)
-                .get()
-                .then(snapshot => {
-                    let tableBody = document.querySelector("#recent-users-table tbody");
-                    tableBody.innerHTML = "";
-
-                    snapshot.forEach(doc => {
-                        let data = doc.data();
-                        let row = `<tr>
-                            <td>${data.name || "Unknown"}</td>
-                            <td>${data.email || "No Email"}</td>
-                            <td>${data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : "N/A"}</td>
-                        </tr>`;
-                        tableBody.innerHTML += row;
-                    });
-                });
-        }
-
-        fetchRecentUsers();
-    </script>
 
 </body>
 

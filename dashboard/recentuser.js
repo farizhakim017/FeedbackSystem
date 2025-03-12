@@ -1,7 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { collection, getDocs, getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+import { exportToExcel } from "./exportExcel.js"; // Import the Excel export function
 
-// ✅ Initialize Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyDFax_hk9d4qvGPrS3EHsf1ug2jIHpiZuI",
     authDomain: "customerfeedbacksystem-2d20b.firebaseapp.com",
@@ -11,54 +11,98 @@ const firebaseConfig = {
     appId: "1:258504629364:web:792fc57ac8161374748521",
     measurementId: "G-9GJ32EF038"
 };
+
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 📌 Fetch & Display Customers in Table
-async function fetchRecentCustomers() {
-    const customersTable = document.getElementById("customersTableBody");
-    customersTable.innerHTML = "";
-
-    try {
-        const querySnapshot = await getDocs(collection(db, "users"));
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-
-            const name = data.name || "No Name";
-            const phone = data.phone || "No Phone";
-            const email = data.email || "No Email";
-
-            const row = `
-                <tr>
-                    <td>${name}</td>
-                    <td>${phone}</td>
-                    <td>${email}</td>
-                </tr>
-            `;
-            customersTable.innerHTML += row;
-        });
-
-        console.log("Customers loaded successfully!");
-    } catch (error) {
-        console.error("Error fetching customers:", error);
-    }
+function selectClinic(clinicId) {
+    localStorage.setItem("selectedClinic", clinicId);
+    window.location.href = "dashboard.html"; // Redirect after selection
 }
 
-// 🔄 Load Customers on Page Load
-document.addEventListener("DOMContentLoaded", fetchRecentCustomers);
+// Fetch recent users
+    // Fetch all recent users from Firestore
+    async function fetchRecentUsers() {
+        try {
+            const selectedClinic = localStorage.getItem("selectedClinic"); // Retrieve stored clinic
+            if (!selectedClinic) {
+                console.warn("No clinic selected.");
+                return;
+            }
 
-// 🔽 Function to Export Table Data to Excel
-document.getElementById("downloadExcel").addEventListener("click", function () {
-    let table = document.querySelector("table");
-    let rows = Array.from(table.querySelectorAll("tr"));
+            const snapshot = await db.collection("clinics")
+                .doc(selectedClinic)
+                .collection("users")
+                .orderBy("timestamp", "desc") // Sort by timestamp (latest first)
+                .get(); // Removed the limit(3) to fetch all users
 
-    let data = rows.map(row => {
-        return Array.from(row.querySelectorAll("th, td")).map(cell => cell.innerText);
+            let tableBody = document.querySelector("#recent-users-table tbody");
+            tableBody.innerHTML = "";
+
+            if (snapshot.empty) {
+                tableBody.innerHTML = `<tr><td colspan="4">No recent users found</td></tr>`; // Updated colspan for 4 columns
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                let data = doc.data();
+                let timestamp = data.timestamp ? formatDateTime(data.timestamp.toDate()) : "N/A";
+
+                let row = `<tr>
+                <td>${data.name || "Unknown"}</td>
+                <td>${data.email || "No Email"}</td>
+                <td>${data.phone || "Nu'uh"}</td>
+                <td>${timestamp}</td>
+            </tr>`;
+
+                tableBody.innerHTML += row;
+            });
+
+        } catch (error) {
+            console.error("Error fetching recent users:", error);
+        }
+    }
+
+// Format date & time
+function formatDateTime(date) {
+    return new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    }).format(date);
+}
+
+// Export to Excel
+if (document.getElementById("exportExcelBtn")) {
+    document.getElementById("exportExcelBtn").addEventListener("click", () => {
+        exportToExcel();
     });
+}
 
-    let ws = XLSX.utils.aoa_to_sheet(data);
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Recent Customers");
+// Load users when page loads
+document.addEventListener("DOMContentLoaded", fetchAllUsers);
 
-    XLSX.writeFile(wb, "Recent_Customers.xlsx");
-});
+export function exportToExcel() {
+    let table = document.getElementById("full-users-table");
+    if (!table) {
+        console.warn("Table not found!");
+        return;
+    }
+
+    let rows = Array.from(table.rows).map(row =>
+        Array.from(row.cells).map(cell => cell.innerText)
+    );
+
+    let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "Customer_List.csv");
+    document.body.appendChild(link);
+    link.click();
+}
