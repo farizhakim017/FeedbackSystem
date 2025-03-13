@@ -106,12 +106,12 @@ function updateDashboard(ratingsCount) {
         let ratingColor;
         if (avg >= 4.5) {
             ratingColor = "#00FF11";
-        } else if (avg >= 4) {
+        } else if (avg >= 3.50) {
             ratingColor = "#7BEC95";
         } else if (avg >= 3) {
-            ratingColor = "#f39c12";
+            ratingColor = "#FF8E48";
         } else if (avg >= 2) {
-            ratingColor = "#e74c3c";
+            ratingColor = "#FF8E48";
         } else {
             ratingColor = "#c0392b";
         }
