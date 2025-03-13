@@ -106,7 +106,7 @@ function updateDashboard(ratingsCount) {
         let ratingColor;
         if (avg >= 4.5) {
             ratingColor = "#00FF11";
-        } else if (avg >= 3.50) {
+        } else if (avg >= 4) {
             ratingColor = "#7BEC95";
         } else if (avg >= 3) {
             ratingColor = "#FF8E48";
@@ -257,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("selectedClinic", selectedClinic);
             selectClinicBtn.innerText = "Clinic: " + selectedClinic;
             closeModal();
+            location.reload(); // Refresh the page after selection
         });
     });
 
@@ -271,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
 
 function loadImprovements(selectedClinic) {
     if (!selectedClinic) return;
