@@ -434,3 +434,47 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Function to fetch users and download CSV
+
+// Function to download CSV
+function downloadCSV(userData) {
+    let csvContent = "User Name,Phone Number,Email,Date\n"; // Header
+
+    userData.forEach(row => {
+        csvContent += `${row.username || "N/A"},${row.phone || "N/A"},${row.email || "N/A"},${row.date || "N/A"}\n`;
+    });
+
+    // Create a Blob & trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "users_data.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Function to fetch users from Firebase
+function fetchUsers() {
+    const db = getDatabase();
+    const usersRef = ref(db, "users"); // Replace "users" with the actual Firebase path
+
+    return get(usersRef).then(snapshot => {
+        if (snapshot.exists()) {
+            return Object.values(snapshot.val()); // Convert object to array
+        } else {
+            console.warn("No user data found.");
+            return [];
+        }
+    }).catch(error => {
+        console.error("Error fetching user data:", error);
+        return [];
+    });
+}
+
+// Load users & enable download
+const downloadBtn = document.getElementById("downloadUsersCSV"); // Ensure button ID is correct
+
+fetchUsers().then(userData => {
+    downloadBtn.addEventListener("click", () => downloadCSV(userData));
+});
